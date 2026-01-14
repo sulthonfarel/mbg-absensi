@@ -1,12 +1,12 @@
-# 📦 MBG Absensi PKL - Aplikasi Web Absensi Pengambilan MBG
+# 📦 MBG Absensi PKL - Aplikasi Web Piket Pengambilan MBG Universitas Majalengka
 
 **Status:** ✅ Production Ready  
 **Version:** 1.0.0  
-**Last Updated:** 13 Januari 2026
+**Last Updated:** 14 Januari 2026
 
 ---
 
-## 🎯 Deskripsi
+## Deskripsi
 
 Aplikasi web sederhana untuk manajemen absensi pengambilan MBG siswa PKL. Dirancang untuk 16 siswa dengan fitur:
 
@@ -18,7 +18,7 @@ Aplikasi web sederhana untuk manajemen absensi pengambilan MBG siswa PKL. Diranc
 
 ---
 
-## 🚀 Mulai Cepat
+##  Mulai Cepat
 
 ### 1. Konfigurasi Firebase
 
@@ -348,7 +348,21 @@ firestore-import \
 
 ## 📄 License
 
-Aplikasi ini gratis untuk digunakan & dimodifikasi. Dibuat dengan ❤️ untuk PKL.
+Aplikasi ini gratis untuk digunakan & dimodifikasi (S&K Berlaku). Dibuat dengan ❤️ untuk PKL Universitas Majalengka.
+** Syarat & Ketentuan **
+
+- Segala bentuk kegiatan dalam proyek ini, termasuk **penggunaan, modifikasi, maupun penyalinan**, **wajib mendapatkan izin tertulis dari author**.  
+  📧 Kontak: **sulthon.farel29@gmail.com**
+
+- Proyek ini **tidak diperbolehkan untuk diperjualbelikan**, baik sebagian maupun keseluruhan, tanpa persetujuan dari author.
+
+- Dilarang mengklaim proyek ini sebagai karya pribadi, baik secara langsung maupun tidak langsung.
+
+- Apabila proyek ini digunakan untuk keperluan **akademik, pembelajaran, atau penelitian**, **wajib mencantumkan kredit kepada author**.
+
+- Author berhak **mengubah syarat dan ketentuan** ini sewaktu-waktu tanpa pemberitahuan sebelumnya.
+
+- Segala risiko yang timbul dari penggunaan proyek ini sepenuhnya menjadi **tanggung jawab pengguna**.
 
 ---
 
@@ -378,5 +392,6 @@ Edit `css/style.css`:
 
 ---
 
-**Made with ❤️ for MBG Absensi PKL**  
+**Made with ❤️ for MBG Absensi PKL Universitas Majalengka**  
+** Auth: Sulthon Farel Abdur Qois **
 v1.0.0 | 13 Januari 2026
