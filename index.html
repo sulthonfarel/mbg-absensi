@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBG Absensi PKL</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-content">
+        <h2>Absensi MBG PKL Universitas Majalengka</h2>
+        <p class="subtitle">Sistem Manajemen Piket Pengambilan MBG</p>
+      </div>
+      <div class="header-status">
+        <span id="connectionStatus" class="status-indicator">●</span>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="piket">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">Piket Order</span>
+      </button>
+      <button class="tab-btn" data-tab="absensi">
+        <span class="tab-icon">✍️</span>
+        <span class="tab-label">Ambil MBG</span>
+      </button>
+      <button class="tab-btn" data-tab="iuran">
+        <span class="tab-icon">💰</span>
+        <span class="tab-label">Iuran Transport</span>
+      </button>
+      <button class="tab-btn" data-tab="recap">
+        <span class="tab-icon">📊</span>
+        <span class="tab-label">Rekapitulasi</span>
+      </button>
+      <button class="tab-btn" data-tab="manage">
+        <span class="tab-icon">⚙️</span>
+        <span class="tab-label">Kelola Data</span>
+      </button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TAB 1: PIKET ORDER -->
+      <section id="piket" class="tab-content active">
+        <div class="tab-header">
+          <h2>Urutan Piket Pengambilan MBG</h2>
+          <p class="tab-description">Setiap MBG slot berisi 2 orang. Geser nama untuk mengatur urutan di dalam atau antar slot.</p>
+        </div>
+
+        <div class="piket-container">
+          <div id="piketSlots" class="piket-slots">
+            <!-- Diisi dinamis via JavaScript: 8 cards MBG 1-8 -->
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button id="savePiketBtn" class="btn btn-primary">💾 Simpan Urutan</button>
+          <button id="resetPiketBtn" class="btn btn-secondary">🔄 Reset Urutan</button>
+          <button id="exportPiketBtn" class="btn btn-info">📥 Ekspor Excel</button>
+        </div>
+
+        <div id="piketStatus" class="status-message"></div>
+      </section>
+
+      <!-- TAB 2: AMBIL MBG -->
+      <section id="absensi" class="tab-content">
+        <div class="tab-header">
+          <h2>Pencatatan Pengambilan MBG</h2>
+          <p class="tab-description">Input tanggal pengambilan. Sistem otomatis mengambil 2 orang berikutnya dari urutan piket.</p>
+        </div>
+
+        <form id="absensiForm" class="form-container">
+          <div class="form-section">
+            <h3>Tanggal Pengambilan</h3>
+            <div class="form-group">
+              <label for="tanggalAbsensi">Tanggal Ambil MBG: <span class="required">*</span></label>
+              <input 
+                type="date" 
+                id="tanggalAbsensi" 
+                required
+                class="input-date"
+              >
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Pengambil MBG (Otomatis)</h3>
+
+            <!-- Pengambil 1 -->
+            <div class="form-group">
+              <label for="pengambil1">Pengambil 1:</label>
+              <input 
+                type="text" 
+                id="pengambil1" 
+                placeholder="Auto dari piket" 
+                readonly
+                class="input-readonly"
+              >
+            </div>
+
+            <div class="substitution-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="substitusi1" class="substitusi-checkbox">
+                <span>Pengambil 1 menggantikan (bukan orang asli)</span>
+              </label>
+              <div id="pengganti1Container" class="select-container hidden">
+                <label for="pengantiSelect1">Siapa yang diganti?</label>
+                <select id="pengantiSelect1" class="input-select">
+                  <option value="">-- Pilih siswa dengan ambil = 0 --</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Pengambil 2 -->
+            <div class="form-group">
+              <label for="pengambil2">Pengambil 2:</label>
+              <input 
+                type="text" 
+                id="pengambil2" 
+                placeholder="Auto dari piket" 
+                readonly
+                class="input-readonly"
+              >
+            </div>
+
+            <div class="substitution-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="substitusi2" class="substitusi-checkbox">
+                <span>Pengambil 2 menggantikan (bukan orang asli)</span>
+              </label>
+              <div id="pengganti2Container" class="select-container hidden">
+                <label for="pengantiSelect2">Siapa yang diganti?</label>
+                <select id="pengantiSelect2" class="input-select">
+                  <option value="">-- Pilih siswa dengan ambil = 0 --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Informasi Tambahan</h3>
+            <div class="form-group">
+              <label for="catatan">Catatan (opsional):</label>
+              <textarea 
+                id="catatan" 
+                placeholder="Misal: Budi berhalangan karena sakit"
+                class="input-textarea"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary">✓ Submit Absensi</button>
+            <button type="reset" class="btn btn-secondary">✕ Batal</button>
+          </div>
+        </form>
+
+        <div id="absensiStatus" class="status-message"></div>
+      </section>
+
+      <!-- TAB 3: IURAN TRANSPORT -->
+      <section id="iuran" class="tab-content">
+        <div class="tab-header">
+          <h2>Patungan Transport MBG</h2>
+          <p class="tab-description">Rp1.500 per siswa per pengambilan. Total Rp24.000 (16 orang × Rp1.500) untuk setiap absensi.</p>
+        </div>
+
+        <div class="iuran-info">
+          <div class="info-card">
+            <span class="info-label">Absensi Terbaru:</span>
+            <span id="lastAbsensiDate" class="info-value">-</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Biaya per Absensi:</span>
+            <span class="info-value">Rp24.000 (16 orang × Rp1.500)</span>
+          </div>
+        </div>
+
+        <div class="iuran-container">
+          <h3>Daftar Pembayaran</h3>
+          <form id="iuranForm" class="checkbox-list">
+            <!-- Diisi dinamis via JavaScript -->
+          </form>
+        </div>
+
+        <div class="action-buttons">
+          <button id="saveIuranBtn" class="btn btn-primary">💾 Simpan Pembayaran</button>
+          <button id="resetIuranBtn" class="btn btn-secondary">🔄 Reset</button>
+        </div>
+
+        <div id="iuranStatus" class="status-message"></div>
+
+        <!-- IURAN SUMMARY -->
+        <div class="iuran-summary">
+          <h3>Ringkasan Iuran</h3>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <span class="summary-label">Total Terkumpul</span>
+              <span id="totalTerkumpul" class="summary-value">Rp0</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-label">Total Seharusnya</span>
+              <span id="totalSeharusnya" class="summary-value">Rp0</span>
+            </div>
+            <div class="summary-card">
+              <span class="summary-label">Siswa Lunas</span>
+              <span id="siswaLunas" class="summary-value">0 / 16</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: REKAPITULASI -->
+      <section id="recap" class="tab-content">
+        <div class="tab-header">
+          <h2>Rekapitulasi Transparansi</h2>
+          <p class="tab-description">Riwayat lengkap pengambilan MBG, status utang, dan pembayaran iuran.</p>
+        </div>
+
+        <!-- RECAP SUB-TABS -->
+        <div class="recap-tabs">
+          <button class="recap-tab-btn active" data-recap-tab="riwayat">
+            📅 Riwayat Pengambilan
+          </button>
+          <button class="recap-tab-btn" data-recap-tab="utang">
+            ⚠️ Status Utang
+          </button>
+          <button class="recap-tab-btn" data-recap-tab="pembayaran">
+            ✅ Status Pembayaran
+          </button>
+        </div>
+
+        <!-- RECAP TAB: RIWAYAT -->
+        <div id="riwayat" class="recap-content active">
+          <h3>Riwayat Pengambilan MBG</h3>
+          <div class="table-responsive">
+            <table id="riwayatTable" class="data-table">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Tanggal Ambil</th>
+                  <th>MBG Slot</th>
+                  <th>Anggota 1</th>
+                  <th>Anggota 2</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Diisi dinamis via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <div id="riwayatEmpty" class="empty-state">
+            <p>Belum ada riwayat pengambilan MBG</p>
+          </div>
+        </div>
+
+        <!-- RECAP TAB: UTANG -->
+        <div id="utang" class="recap-content">
+          <h3>Status Utang Penggantian Siswa</h3>
+          <div class="table-responsive">
+            <table id="utangTable" class="data-table">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Nama Siswa</th>
+                  <th>Utang</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Diisi dinamis via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <div id="utangEmpty" class="empty-state">
+            <p>Semua siswa bebas utang 😊</p>
+          </div>
+        </div>
+
+        <!-- RECAP TAB: PEMBAYARAN -->
+        <div id="pembayaran" class="recap-content">
+          <h3>Status Pembayaran Iuran Transport</h3>
+          <div class="table-responsive">
+            <table id="pembayaranTable" class="data-table">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Nama Siswa</th>
+                  <th>Sudah Bayar</th>
+                  <th>Belum Bayar</th>
+                  <th>Total (Rp)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Diisi dinamis via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <div id="pembayaranEmpty" class="empty-state">
+            <p>Data pembayaran belum tersedia</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: KELOLA DATA -->
+      <section id="manage" class="tab-content">
+        <div class="tab-header">
+          <h2>Kelola Data Anggota</h2>
+          <p class="tab-description">Tambah, edit, atau hapus data siswa PKL.</p>
+        </div>
+
+        <!-- FORM TAMBAH/EDIT -->
+        <div class="form-container manage-form">
+          <h3 id="formTitle">Tambah Siswa Baru</h3>
+          <form id="manageForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="manageName">Nama Siswa:</label>
+                <input type="text" id="manageName" placeholder="Nama lengkap" required>
+              </div>
+              <div class="form-group">
+                <label for="manageNis">NIS:</label>
+                <input type="text" id="manageNis" placeholder="Nomor Induk Siswa">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="manageJurusan">Jurusan:</label>
+                <select id="manageJurusan" required>
+                  <option value="">-- Pilih Jurusan --</option>
+                  <option value="AKL">AKL</option>
+                  <option value="MP">MP</option>
+                  <option value="TKJ">TKJ</option>
+                  <option value="RPL">RPL</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="manageAmbil">Jumlah Ambil:</label>
+                <input type="number" id="manageAmbil" value="0" min="0">
+              </div>
+              <div class="form-group">
+                <label for="manageUtang">Jumlah Utang:</label>
+                <input type="number" id="manageUtang" value="0" min="0">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="btn btn-primary">➕ Tambah</button>
+              <button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display:none;">❌ Batal</button>
+            </div>
+          </form>
+          <div id="manageStatus" class="status-message"></div>
+        </div>
+
+        <!-- DAFTAR SISWA -->
+        <div class="manage-list">
+          <h3>Daftar Siswa (Total: <span id="totalSiswa">0</span>)</h3>
+          <div id="siswaListContainer" class="siswa-list">
+            <!-- Diisi dinamis -->
+          </div>
+          
+          <!-- RESET DATA SECTION -->
+          <div class="reset-section">
+            <hr style="margin: var(--spacing-lg) 0;">
+            <h3 style="color: #dc2626;">⚠️ Zone Berbahaya</h3>
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: var(--spacing-md);">
+              Klik tombol di bawah untuk mereset semua data absensi, iuran, dan urutan piket. 
+              Data siswa (nama, NIS, jurusan) akan tetap aman.
+            </p>
+            <button id="resetAllDataBtn" class="btn btn-danger" style="width: 100%;">🔴 Reset Semua Data</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER: SYARAT & KETENTUAN -->
+    <footer class="footer">
+      <section class="terms-section">
+        <h3>⚖️ Syarat & Ketentuan</h3>
+        <ol class="terms-list">
+          <li>Pengambilan MBG dilakukan oleh <strong>2 orang setiap kali</strong>.</li>
+          <li>Absensi <strong>wajib diisi</strong> setiap ada pengambilan MBG.</li>
+          <li>Penggantian tetap dihitung sebagai <strong>utang</strong> untuk siswa yang diganti.</li>
+          <li>Iuran transport <strong>wajib dibayar</strong> (Rp1.500 per siswa per pengambilan = Rp24.000 total).</li>
+          <li>Semua data bersifat <strong>transparan</strong> untuk semua siswa PKL.</li>
+          <li>Pengganti harus merupakan siswa yang <strong>belum pernah mengambil MBG</strong> (ambil = 0).</li>
+          <li>Jika ada perubahan urutan, <strong>simpan perubahan</strong> sebelum melakukan pengambilan baru.</li>
+        </ol>
+      </section>
+
+      <div class="footer-info">
+        <p>
+          <strong>Aplikasi Absensi MBG</strong> • v1.0 • 
+          <span id="lastSync">Connecting...</span> <br>
+          <strong>GitHub: @sulthonfarel</strong> 
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- EXTERNAL LIBRARIES -->
+  <!-- SortableJS untuk drag & drop -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  
+  <!-- SheetJS untuk export Excel - dari jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Firebase SDK from CDN (compat version) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- APP SCRIPTS - Defer untuk pastikan Firebase SDK sudah load -->
+  <script src="js/firebase.js" defer></script>
+  <script src="js/piket.js" defer></script>
+  <script src="js/absensi.js" defer></script>
+  <script src="js/iuran.js" defer></script>
+  <script src="js/manage.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
